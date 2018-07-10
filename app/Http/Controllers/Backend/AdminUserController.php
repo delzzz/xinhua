@@ -87,7 +87,7 @@ class AdminUserController extends Controller
         $password = $request->input('password');
         $verifyCode = $request->input('verify_code');
         $vfyCode = $request->session()->get('verify_code');
-        if ($verifyCode !== $vfyCode) {
+        if (strtolower($verifyCode) !== strtolower($vfyCode)) {
             $msg['msg'] = '验证码不正确';
             $msg['success'] = -1;
             return $msg;
