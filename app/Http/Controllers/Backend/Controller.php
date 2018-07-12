@@ -80,7 +80,7 @@ class Controller extends BaseController
                 }
                 $this->userId = $userArr->user_id;
                 $this->userName = $userArr->username;
-                $this->realName = $userArr->real_name;
+                $this->realName = $userArr->real_name??'';
                 $user = new AdminUser();
                 $info = $user->info($this->userId);
                 $rid = $info->rid;
