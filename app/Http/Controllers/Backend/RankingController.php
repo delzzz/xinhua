@@ -20,6 +20,7 @@ class RankingController extends Controller
         $type = $request->input('type'); //0:游戏 1:活动
         $dateType = $request->input('date_type'); //0:7天 1:30天
         $ranking = array();
+        $totalArr = array();
         if ($type == 1) {
             if ($dateType == 1) {
                 //活动
