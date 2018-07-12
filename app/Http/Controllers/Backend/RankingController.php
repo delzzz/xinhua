@@ -64,6 +64,7 @@ class RankingController extends Controller
     {
         $type = $request->input('date_type');
         $ranking = array();
+        $totalArr = array();
         //全部
         if ($type == 1) {
             //30天
@@ -95,6 +96,7 @@ class RankingController extends Controller
     {
         $num = $request->input('num')??5;
         $totalList = Redis::Zrevrange('regionScoreRanking', 0, $num - 1, 'WITHSCORES');
+        $ranking = array();
         $i = 0;
         foreach ($totalList as $regionName => $score) {
             $rName = '';
@@ -157,6 +159,7 @@ class RankingController extends Controller
         $i = 0;
         $scoreList = Redis::Zrevrange('userScoreRanking', 0, 9, 'WITHSCORES');
         $region = new Region();
+        $ranking = array();
         foreach ($scoreList as $userId => $score) {
             $info = $user->getInfo($userId);
             $ranking[$i]['rank'] = $i + 1;
@@ -174,6 +177,7 @@ class RankingController extends Controller
         $totalList = Redis::Zrevrange('gameTotalRanking', 0, 9, 'WITHSCORES');
         $scoreList = Redis::Zrevrange('gameScoreRanking', 0, -1, 'WITHSCORES');
         $game = new Game();
+        $gameTotalList = array();
         $i = 0;
         foreach ($totalList as $gameId => $total) {
             $info = $game->getInfo($gameId);
