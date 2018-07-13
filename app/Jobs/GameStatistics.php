@@ -39,14 +39,14 @@ class GameStatistics implements ShouldQueue
         $gameList = $game->getList();
         foreach ($gameList as $key => $value) {
             //用户分数
-            $gameUserScores = \DB::select('SELECT user_id,SUM(score) as score FROM user_game  ug INNER JOIN USER u ON u.id = ug.user_id WHERE deleted_at IS NULL GROUP BY user_id,game_id HAVING game_id =? ORDER BY score DESC,user_id ASC', [$value->id]);
+            $gameUserScores = \DB::select('SELECT user_id,SUM(score) as score FROM user_game  ug INNER JOIN user u ON u.id = ug.user_id WHERE deleted_at IS NULL GROUP BY user_id,game_id HAVING game_id =? ORDER BY score DESC,user_id ASC', [$value->id]);
             //Log::info('s',['arr'=>$gameUserScores]);
             Redis::del('gameUserScoreRanking_'.$value->id);
             foreach ($gameUserScores as $k=>$gameUserScore){
                 Redis::zadd('gameUserScoreRanking_'.$value->id,$gameUserScore->score,$gameUserScore->user_id);
             }
             //地区人数
-            $gameRegionTotals = \DB::select('SELECT county,COUNT(DISTINCT(user.id)) AS total FROM USER INNER JOIN user_game ON user.id = user_game.`user_id` WHERE deleted_at IS NULL GROUP BY county,game_id HAVING game_id=?',[$value->id]);
+            $gameRegionTotals = \DB::select('SELECT county,COUNT(DISTINCT(user.id)) AS total FROM user INNER JOIN user_game ON user.id = user_game.`user_id` WHERE deleted_at IS NULL GROUP BY county,game_id HAVING game_id=?',[$value->id]);
             Redis::del('gameRegionTotalRanking_'.$value->id);
             foreach ($gameRegionTotals as $gameRegionTotal){
                 Redis::zadd('gameRegionTotalRanking_'.$value->id,$gameRegionTotal->total,$region->getFullName($gameRegionTotal->county));
