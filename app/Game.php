@@ -40,4 +40,18 @@ class Game extends Model
     {
         return Game::find($id)->update(['status' => $status]);
     }
+
+    //判断appid是否重复
+    function checkAppID($appId,$id = null){
+        if (!empty($id)) {
+            $count = Game::where('appid', $appId)->where('id', '<>', $id)->count();
+        } else {
+            $count = Game::where('appid', $appId)->count();
+        }
+        if ($count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

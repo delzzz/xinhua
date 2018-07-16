@@ -23,6 +23,8 @@ class ActivityController extends Controller
         $userId = $this->userId;
         $fields = $request->all();
         $id = $request->input('id');
+        $appId = $request->input('appid');
+        $activity = new Activity();
         if(!$id){
             $this->validate($request, [
                 'name' => 'required',
@@ -31,11 +33,22 @@ class ActivityController extends Controller
                 'appid' => 'required',
                 'appsecret' => 'required'
             ]);
+            //appId重复
+            if($activity->checkAppID($appId)){
+                $msg['success'] = -1;
+                $msg['msg'] = 'appID重复';
+                return json_encode($msg, JSON_UNESCAPED_UNICODE);
+            }
             $fields['uid'] = $userId;
             $description = '添加H5链接'.$request->input('name');
         }
         else{
-            $activity = new Activity();
+            //appId重复
+            if($activity->checkAppID($appId,$id)){
+                $msg['success'] = -1;
+                $msg['msg'] = 'appID重复';
+                return json_encode($msg, JSON_UNESCAPED_UNICODE);
+            }
             $info = $activity->getInfo($id);
             $description = '修改H5链接'.$info->name;
         }

@@ -44,4 +44,17 @@ class Activity extends Model
         return Activity::where('status',1)->get();
     }
 
+    //判断appid是否重复
+    function checkAppID($appId,$id = null){
+        if (!empty($id)) {
+            $count = Activity::where('appid', $appId)->where('id', '<>', $id)->count();
+        } else {
+            $count = Activity::where('appid', $appId)->count();
+        }
+        if ($count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

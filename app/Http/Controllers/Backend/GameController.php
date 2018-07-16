@@ -51,6 +51,8 @@ class GameController extends Controller
         $userId = $this->userId;
         $fields = $request->all();
         $id = $request->input('id');
+        $appId = $request->input('appid');
+        $game = new Game();
         if(!$id){
             $this->validate($request, [
                 'name' => 'required',
@@ -59,11 +61,22 @@ class GameController extends Controller
                 'appid' => 'required',
                 'appsecret' => 'required'
             ]);
+            //appId重复
+            if($game->checkAppID($appId)){
+                $msg['success'] = -1;
+                $msg['msg'] = 'appID重复';
+                return json_encode($msg, JSON_UNESCAPED_UNICODE);
+            }
             $fields['uid'] = $userId;
             $description = '添加游戏'.$request->input('name');
         }
         else{
-            $game = new Game();
+            //appId重复
+            if($game->checkAppID($appId,$id)){
+                $msg['success'] = -1;
+                $msg['msg'] = 'appID重复';
+                return json_encode($msg, JSON_UNESCAPED_UNICODE);
+            }
             $info = $game->getInfo($id);
             $description = '修改游戏'.$info->name;
         }
