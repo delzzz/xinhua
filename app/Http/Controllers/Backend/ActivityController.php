@@ -159,7 +159,7 @@ class ActivityController extends Controller
         $activity = new Activity();
         $activityList = array();
         $activities = $activity->getList();
-        $admin = new AdminUser();
+        //$admin = new AdminUser();
         foreach ($activities as $key => $activity) {
             $activityList[$key]['id'] = $activity->id;
             $activityList[$key]['name'] = $activity->name;

@@ -84,7 +84,7 @@ class GameController extends Controller
             ['id' => $id],
             $fields
         );
-        if ($game) {
+        if ($game->save()) {
             $msg['success'] = 1;
             $msg['msg'] = $description.'成功';
             $type = 1;
@@ -155,7 +155,7 @@ class GameController extends Controller
         $game = new Game();
         $gameList = array();
         $games = $game->getList();
-        $admin = new AdminUser();
+        //$admin = new AdminUser();
         foreach ($games as $key => $game) {
             $gameList[$key]['id'] = $game->id;
             $gameList[$key]['name'] = $game->name;
