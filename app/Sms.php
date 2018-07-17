@@ -43,9 +43,9 @@ class Sms
         $domain = "dysmsapi.aliyuncs.com";
 
         // TODO 此处需要替换成开发者自己的AK (https://ak-console.aliyun.com/)
-        $accessKeyId = "LTAIoGL5eQlcwm92"; // AccessKeyId
+        $accessKeyId = "LTAITVAhIrRN0Rl0"; // AccessKeyId
 
-        $accessKeySecret = "x2dHB8b5l1tbGfH5knRTmjSP4ctG1F"; // AccessKeySecret
+        $accessKeySecret = "UCiyGShP1aIX7wNUxZCosyGPgM53bc"; // AccessKeySecret
 
         // 暂时不支持多Region
         $region = "cn-hangzhou";
@@ -84,10 +84,10 @@ class Sms
         $request->setPhoneNumbers($mobile);
 
         // 必填，设置签名名称，应严格按"签名名称"填写，请参考: https://dysms.console.aliyun.com/dysms.htm#/develop/sign
-        $request->setSignName("慈硕智慧养老");
+        $request->setSignName("媒体融合应用中心");
 
         // 必填，设置模板CODE，应严格按"模板CODE"填写, 请参考: https://dysms.console.aliyun.com/dysms.htm#/develop/template
-        $request->setTemplateCode("SMS_72165033");
+        $request->setTemplateCode("SMS_139242529");
 
         // 可选，设置模板参数, 假如模板中存在变量需要替换则为必填项
         $request->setTemplateParam(json_encode(array(  // 短信模板中字段的值
