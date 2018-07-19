@@ -12,18 +12,23 @@ class Game extends Model
     protected $dates = ['deleted_at'];
 
     //用户
-    public function users(){
+    function users(){
         return $this->belongsToMany('App\User','user_game','game_id','user_id')->as('user_game')->withTimestamps();
     }
 
     //游戏列表
-    public function getList(){
+    function getList(){
         return Game::where('status',1)->get();
     }
 
-    //游戏详情
-    public function getInfo($gameId){
+    //游戏id获取详情
+    function getInfo($gameId){
         return Game::withTrashed()->find($gameId);
+    }
+
+    //游戏appid获取详情
+    function getInfoByAppId($appId){
+        return Game::withTrashed()->where('appid',$appId)->get();
     }
 
     //删除游戏
