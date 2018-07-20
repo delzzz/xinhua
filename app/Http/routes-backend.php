@@ -126,8 +126,6 @@ Route::post('/delActivity', 'ActivityController@del');
 Route::get('/gameList', 'GameController@lists');
 //游戏详情
 Route::get('/gameInfo', 'GameController@info');
-//游戏详情
-Route::get('/gameInfoByAppId', 'GameController@infoByAppId');
 //新增或修改游戏
 Route::post('/addGame', 'GameController@add');
 //改变游戏状态

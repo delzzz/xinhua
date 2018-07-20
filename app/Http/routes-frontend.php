@@ -42,7 +42,8 @@ Route::get('/indexList','GameController@indexList');
 Route::get('/gameList','GameController@lists');
 //所有活动列表
 Route::get('/activityList','ActivityController@lists');
-
+//游戏详情
+Route::get('/gameInfoByAppId', 'GameController@infoByAppId');
 
 
 //用户轨迹

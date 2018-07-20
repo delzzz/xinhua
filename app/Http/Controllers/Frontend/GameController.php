@@ -13,7 +13,7 @@ class GameController extends Controller
 {
     function __construct(Request $request)
     {
-        $this->pathArr = array('gameList', 'indexList');
+        $this->pathArr = array('gameList', 'indexList','gameInfoByAppId');
         parent::__construct($request);
     }
 
@@ -60,5 +60,12 @@ class GameController extends Controller
         echo json_encode($indexList??array(), JSON_UNESCAPED_UNICODE);
     }
 
-
+    //根据appid获取详情
+    function infoByAppId(Request $request){
+        $this->validate($request, [
+            'appid' => 'required']);
+        $id = $request->input('appid');
+        $game = new Game();
+        return json_encode($game->getInfoByAppId($id),JSON_UNESCAPED_UNICODE);
+    }
 }

@@ -45,13 +45,7 @@ class GameController extends Controller
         return json_encode($game->getInfo($id),JSON_UNESCAPED_UNICODE);
     }
 
-    function infoByAppId(Request $request){
-        $this->validate($request, [
-            'appid' => 'required']);
-        $id = $request->input('appid');
-        $game = new Game();
-        return json_encode($game->getInfoByAppId($id),JSON_UNESCAPED_UNICODE);
-    }
+
 
     //新增/修改游戏
     function add(Request $request)

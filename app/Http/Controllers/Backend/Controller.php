@@ -37,7 +37,7 @@ class Controller extends BaseController
         $this->modulesArr['department'] = array('departmentInfo', 'addDepartment', 'delDepartment');
         $this->modulesArr['user'] = array('userInfo', 'editUserPassword', 'changeUserStatus', 'delUser');
         $this->modulesArr['activity'] = array('activityInfo', 'addActivity', 'changeActivityStatus', 'delActivity', 'uploadImg');
-        $this->modulesArr['game'] = array('gameInfo', 'addGame', 'changeGameStatus', 'delGame', 'uploadImg','gameInfoByAppId');
+        $this->modulesArr['game'] = array('gameInfo', 'addGame', 'changeGameStatus', 'delGame', 'uploadImg');
         $this->modulesArr['channel'] = array('channelInfo', 'addChannel', 'changeChannelLevel', 'delChannel', 'uploadImg');
         $this->modulesArr['topic'] = array('topicInfo', 'addTopic', 'editTopic', 'delTopic', 'uploadImg');
         $this->modulesArr['article'] = array('articleInfo', 'addArticle', 'delArticle', 'uploadImg');
