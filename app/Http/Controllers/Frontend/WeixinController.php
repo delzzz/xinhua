@@ -205,8 +205,8 @@ class WeixinController extends Controller
         $signature = sha1($jsStr);
         $arr['appid'] = $appId;
         $arr['jsapi_ticket'] = $jsapiTicket;
-        $arr['noncestr'] = $randStr;
-        $arr['timestamp'] = $timeStamp;
+        $arr['noncestr'] = $randStr.'';
+        $arr['timestamp'] = $timeStamp.'';
         $arr['signature'] = $signature;
         return  json_encode($arr, JSON_UNESCAPED_UNICODE);
     }
