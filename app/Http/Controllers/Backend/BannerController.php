@@ -54,7 +54,6 @@ class BannerController extends Controller
             $this->validate($request, [
                 'name' => 'required',
                 'picture' => 'required',
-                'url' => 'required',
             ]);
             $fields['uid'] = $userId;
             $description = '添加广告'.$request->input('name');
