@@ -38,7 +38,7 @@ class WeixinController extends Controller
         $userInfo['scope'] = $arr['scope'];
         $userInfo['expires_in'] = $arr['expires_in'];
         $userInfo['headimgurl'] = $infoArr['headimgurl'];
-        $userInfo['nickname'] = $infoArr['nickname'];
+        $userInfo['nickname'] = $weixin->filterEmoji($infoArr['nickname']);
         $userInfo['sex'] = $infoArr['sex'];
         $userInfo['country'] = $infoArr['country'];
         $userInfo['province'] = $infoArr['province'];
@@ -120,7 +120,7 @@ class WeixinController extends Controller
         $userInfo['scope'] = $arr['scope'];
         $userInfo['expires_in'] = $arr['expires_in'];
         $userInfo['headimgurl'] = $infoArr['headimgurl'];
-        $userInfo['nickname'] = $infoArr['nickname'];
+        $userInfo['nickname'] = $weixin->filterEmoji($infoArr['nickname']);
         $userInfo['sex'] = $infoArr['sex'];
         $userInfo['country'] = $infoArr['country'];
         $userInfo['province'] = $infoArr['province'];
