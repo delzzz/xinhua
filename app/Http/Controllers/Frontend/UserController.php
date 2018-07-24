@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\UserWeixin;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache as C;
-use App\Log;
+use Illuminate\Support\Facades\Log;
 
 
 
