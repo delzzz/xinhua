@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\UserWeixin;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache as C;
+use App\Log;
+
 
 
 class UserController extends Controller
@@ -280,8 +282,9 @@ class UserController extends Controller
         $id = $this->userId;
         $user = new User();
         $info = $user->getInfo($id);
+        Log::info('test',['id'=>$id,'user'=>$info]);
         $userInfo['id'] = $id;
-        $userInfo['nickname'] = $info->nickname;
+        $userInfo['nickname'] = $info->nickname??'';
         $userInfo['province'] = $info->province;
         $userInfo['city'] = $info->city;
         $userInfo['county'] = $info->county;
