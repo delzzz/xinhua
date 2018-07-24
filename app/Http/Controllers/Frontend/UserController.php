@@ -34,8 +34,7 @@ class UserController extends Controller
             $msg['success'] = 1;
             $msg['msg'] = '昵称校验成功';
         }
-        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-        exit();
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //判断手机验证码
@@ -55,8 +54,7 @@ class UserController extends Controller
             $msg['success'] = 0;
             $msg['msg'] = '验证码不正确';
         }
-        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-        exit();
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
 
@@ -135,8 +133,7 @@ class UserController extends Controller
         } else {
             $msg['msg'] = '注册成功';
         }
-        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-        exit();
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //登录后修改密码
@@ -160,8 +157,7 @@ class UserController extends Controller
             $msg['success'] = 1;
             $msg['msg'] = '修改密码成功';
         }
-        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-        exit();
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //忘记密码
@@ -195,8 +191,7 @@ class UserController extends Controller
             $msg['success'] = 0;
             $msg['msg'] = '验证码不正确';
         }
-        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-        exit();
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //用户登录
@@ -263,8 +258,7 @@ class UserController extends Controller
                 $msg['token'] = $token;
                 $user->setUserLogin($mobile, 1);
             }
-            echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-            exit();
+            return json_encode($msg, JSON_UNESCAPED_UNICODE);
         }
     }
 
@@ -273,7 +267,7 @@ class UserController extends Controller
     {
         $userId = $this->userId;
         $user = new User();
-        echo json_encode($user->userGameList($userId, 10), JSON_UNESCAPED_UNICODE);
+        return json_encode($user->userGameList($userId, 10), JSON_UNESCAPED_UNICODE);
     }
 
     //用户信息
@@ -282,9 +276,11 @@ class UserController extends Controller
         $id = $this->userId;
         $user = new User();
         $info = $user->getInfo($id);
-        Log::info('test',['id'=>$id,'user'=>$info]);
+        if(empty($info)){
+            return null;
+        }
         $userInfo['id'] = $id;
-        $userInfo['nickname'] = $info->nickname??'';
+        $userInfo['nickname'] = $info->nickname;
         $userInfo['province'] = $info->province;
         $userInfo['city'] = $info->city;
         $userInfo['county'] = $info->county;
@@ -295,7 +291,7 @@ class UserController extends Controller
         $region = new Region();
         $userInfo['region'] = $region->regionName($info->province . ',' . $info->city . ',' . $info->county);
         $userInfo['success'] = 1;
-        echo json_encode($userInfo, JSON_UNESCAPED_UNICODE);
+        return json_encode($userInfo, JSON_UNESCAPED_UNICODE);
     }
 
     //修改信息
@@ -320,7 +316,7 @@ class UserController extends Controller
             $msg['success'] = -1;
             $msg['msg'] = '修改失败';
         }
-        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //上传头像
@@ -334,7 +330,7 @@ class UserController extends Controller
         } else {
             $msg['success'] = 0;
         }
-        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //用户获得积分
@@ -369,8 +365,7 @@ class UserController extends Controller
             $msg['success'] = -1;
             $msg['msg'] = '校验失败';
         }
-        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-        exit();
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //参与活动
@@ -408,8 +403,7 @@ class UserController extends Controller
             $msg['success'] = -1;
             $msg['msg'] = '校验失败';
         }
-        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-        exit();
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //用户游戏积分列表
@@ -446,7 +440,7 @@ class UserController extends Controller
             $arr['rank'] = 0;
             $arr['score'] = 0;
         }
-        echo json_encode($arr, JSON_UNESCAPED_UNICODE);
+        return json_encode($arr, JSON_UNESCAPED_UNICODE);
     }
 
     //总排行榜-获取地区人数总榜-自己的排行
