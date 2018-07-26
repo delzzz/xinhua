@@ -17,26 +17,26 @@ class User extends Model
     protected $hidden = ['password'];
 
     //游戏
-    public function games()
+    function games()
     {
         return $this->belongsToMany('App\Game', 'user_game', 'user_id', 'game_id')->as('user_game')->withPivot('score')->withTimestamps();
     }
 
     //活动
-    public function activities()
+    function activities()
     {
         return $this->belongsToMany('App\Activity', 'user_activity', 'user_id', 'activity_id')->as('user_activity')->withPivot('step', 'step_value')->withTimestamps();
     }
 
     //根据userId获取用户信息
-    public function getInfo($userId)
+    function getInfo($userId)
     {
         $userInfo = User::find($userId);
         return $userInfo;
     }
 
     //判断用户是否注册
-    public function isRegistered($mobile)
+    function isRegistered($mobile)
     {
         $count = User::where('mobile', $mobile)->count();
         if ($count > 0) {
@@ -47,19 +47,30 @@ class User extends Model
     }
 
     //根据手机号获取用户信息
-    public function getInfoByMobile($mobile)
+    function getInfoByMobile($mobile)
     {
         return User::where('mobile', $mobile)->get();
     }
 
+    //用户登录
+    function userLogin($lastIP,$userId,$userAgent,$mobile){
+        $user = new User();
+        User::where('id', $userId)
+            ->update(['last_ip' => $lastIP, 'last_login' => date('Y-m-d H:i:s')]);
+        $token = $user->createToken($userAgent, $userId, $mobile);
+        C::put($userId, $token, 4320);
+        $user->setUserLogin($mobile, 1);
+        return $token;
+    }
+
     //用户登录日志
-    public function setUserLogin($mobile, $status)
+    function setUserLogin($mobile, $status)
     {
         \DB::table('user_login')->insert(['mobile' => $mobile, 'ip_addr' => $_SERVER["REMOTE_ADDR"], 'login_time' => date('Y-m-d H:i:s', time()), 'status' => $status]);
     }
 
     //获取用户登录错误次数
-    public function getErrLoginCount($mobile)
+    function getErrLoginCount($mobile)
     {
         $todayStart = date('Y-m-d H:i:s', time() - 60 * 10);
         $todayEnd = date('Y-m-d H:i:s');
@@ -72,20 +83,20 @@ class User extends Model
     }
 
     //更改用户状态
-    public function changeUserStatus($mobile, $status)
+    function changeUserStatus($mobile, $status)
     {
         User::where('mobile', $mobile)->update(['status' => $status]);
     }
 
     //获取用户状态
-    public function getUserStatus($mobile)
+    function getUserStatus($mobile)
     {
         $info = User::where('mobile', $mobile)->get()[0];
         return $info->status;
     }
 
     //检查昵称是否重复
-    public function checkName($nickname, $uid = null)
+    function checkName($nickname, $uid = null)
     {
         if (!empty($uid)) {
             $count = User::where('nickname', $nickname)->where('id', '<>', $uid)->count();
@@ -100,7 +111,7 @@ class User extends Model
     }
 
     //手机号验证码
-    public function checkVerifyCode($mobile, $verifyCode)
+    function checkVerifyCode($mobile, $verifyCode)
     {
         $currentTime = date('Y-m-d H:i:s');
         $verify_code = C::get($mobile);

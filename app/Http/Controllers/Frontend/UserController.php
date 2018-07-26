@@ -131,7 +131,12 @@ class UserController extends Controller
                 echo json_encode($msg, JSON_UNESCAPED_UNICODE);
             }
         } else {
-            $msg['msg'] = '注册成功';
+            $userInfo = $user->getInfoByMobile($mobile)[0];
+            $token = $user->userLogin($_SERVER["REMOTE_ADDR"],$userInfo->id,$request->header('user_agent'),$mobile);
+            $msg['data'] = $userInfo->id;
+            $msg['success'] = 1;
+            $msg['token'] = $token;
+            $msg['msg'] = '注册登录成功';
         }
         return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
@@ -248,15 +253,10 @@ class UserController extends Controller
                     $msg['success'] = 0;
                 }
             } else {
-                User::where('id', $userInfo->id)
-                    ->update(['last_ip' => $_SERVER["REMOTE_ADDR"], 'last_login' => date('Y-m-d H:i:s')]);
-                $userAgent = $request->header('user_agent');
-                $token = $user->createToken($userAgent, $userInfo->id, $mobile);
-                C::put($userInfo->id, $token, 4320);
+                $token = $user->userLogin($_SERVER["REMOTE_ADDR"],$userInfo->id,$request->header('user_agent'),$mobile);
                 $msg['data'] = $userInfo->id;
                 $msg['success'] = 1;
                 $msg['token'] = $token;
-                $user->setUserLogin($mobile, 1);
             }
             return json_encode($msg, JSON_UNESCAPED_UNICODE);
         }
