@@ -177,6 +177,12 @@ class UserController extends Controller
         $mobile = $request->input('mobile');
         $password = $request->input('password');
         $verifyCode = $request->input('verify_code');
+        //判断用户是否注册
+        if(false == $user->isRegistered($mobile)){
+            $msg['msg'] = '无该用户';
+            $msg['success'] = -2;
+            return json_encode($msg, JSON_UNESCAPED_UNICODE);
+        }
         //判断用户是否锁定
         $status = $user->getUserStatus($mobile);
         if ($status == 0) {
