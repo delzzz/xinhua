@@ -115,8 +115,8 @@ class UserController extends Controller
                 $user->where('mobile', $mobile)->update(['last_ip' => $_SERVER["REMOTE_ADDR"], 'last_login' => date('Y-m-d H:i:s')]);
                 $weixin->updateByUnionid($unionid, ['uid' => $uid]);
                 $userAgent = $request->header('user_agent');
-                $token = $user->createToken($userAgent, $msg['data'], $mobile);
-                C::put($msg['data'], $token, 4320);
+                $token = $user->createToken($userAgent, $uid, $mobile);
+                C::put($uid, $token, 4320);
                 if ($token) {
                     $msg['token'] = $token;
                     $msg['msg'] = '登录成功';
