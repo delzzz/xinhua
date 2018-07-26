@@ -331,8 +331,7 @@ class UserController extends Controller
         $path = $request->file('avatar')->store('uploads');
         if ($path) {
             $msg['success'] = 1;
-            $msg['path'] = asset($path);
-
+            $msg['path'] = env("UPLOAD_HOST").$path; #asset($path);
         } else {
             $msg['success'] = 0;
         }
