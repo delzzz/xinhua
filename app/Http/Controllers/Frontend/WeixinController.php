@@ -53,6 +53,12 @@ class WeixinController extends Controller
                 //判断账号是否锁住
                 $user = new User();
                 $uInfo = $user->getInfo($uid);
+                if(empty($uInfo)){
+                    $weixinArr['base'] = $arr;
+                    $weixinArr['info'] = $infoArr;
+                    echo json_encode($weixinArr, JSON_UNESCAPED_UNICODE);
+                    exit();
+                }
                 if ($uInfo->status == 2) {
                     $msg['msg'] = '账号已停用';
                     $msg['success'] = -1;
