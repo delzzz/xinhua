@@ -169,9 +169,9 @@ HAVING user_id=? and deleted_at is null ORDER BY max_created DESC limit ' . $num
         $weixin = new UserWeixin();
         foreach ($idArr as $key => $value) {
             $info = User::find($value);
-            if ($info->source == 1) {
+            //if ($info->source == 1) {
                 $weixin->where('uid', $value)->delete();
-            }
+            //}
             $flag = User::find($value)->delete();
         }
         return $flag;
