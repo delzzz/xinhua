@@ -212,6 +212,7 @@ class UserController extends Controller
             'mobile' => 'required',
             'password' => 'required',
         ]);
+        $unionid = $request->input('unionid');
         $user = new User();
         $mobile = $request->input('mobile');
         $password = $request->input('password');
@@ -259,6 +260,13 @@ class UserController extends Controller
                     $msg['success'] = 0;
                 }
             } else {
+                //判断有没有unionid
+                if(!empty($unionid)){
+                    //微信绑定uid
+                    $uid = $userInfo->id;
+                    $weixin = new UserWeixin();
+                    $weixin->updateByUnionid($unionid, ['uid' => $uid]);
+                }
                 $token = $user->userLogin($_SERVER["REMOTE_ADDR"],$userInfo->id,$request->header('user_agent'),$mobile);
                 $msg['data'] = $userInfo->id;
                 $msg['success'] = 1;
