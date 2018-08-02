@@ -129,9 +129,9 @@ class User extends Model
         $userActivityList = array();
         //游戏列表
         $gameList = Redis::Zrange('gameTotalRanking', 0, -1, 'WITHSCORES');
-        $usersGames = \DB::select('SELECT name,game_id,user_id,game.status,MAX(user_game.created_at) AS max_created,picture FROM user_game 
+        $usersGames = \DB::select('SELECT name,game_id,user_id,game.status,MAX(user_game.created_at) AS max_created,picture,url FROM user_game 
 INNER JOIN game ON game.id = user_game.`game_id`
-GROUP BY game_id,user_id,picture,name,deleted_at,status 
+GROUP BY game_id,user_id,picture,name,deleted_at,status,url 
 HAVING user_id=? and deleted_at is null ORDER BY max_created DESC limit ' . $num, [$userId]);
         foreach ($usersGames as $key => $value) {
             $userGameList[$key]['id'] = $value->game_id;
@@ -141,6 +141,7 @@ HAVING user_id=? and deleted_at is null ORDER BY max_created DESC limit ' . $num
             $userGameList[$key]['created_at'] = $value->max_created;
             $userGameList[$key]['name'] = $value->name;
             $userGameList[$key]['status'] = $value->status;
+            $userGameList[$key]['url'] = $value->url;
         }
         //活动列表
         $activityList = Redis::Zrange('activityTotalRanking', 0, -1, 'WITHSCORES');
