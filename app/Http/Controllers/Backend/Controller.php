@@ -39,7 +39,7 @@ class Controller extends BaseController
         $this->modulesArr['activity'] = array('activityInfo', 'addActivity', 'changeActivityStatus', 'delActivity', 'uploadImg');
         $this->modulesArr['game'] = array('gameInfo', 'addGame', 'changeGameStatus', 'delGame', 'uploadImg');
         $this->modulesArr['channel'] = array('channelInfo', 'addChannel', 'changeChannelLevel', 'delChannel', 'uploadImg');
-        $this->modulesArr['topic'] = array('topicInfo', 'addTopic', 'editTopic', 'delTopic', 'uploadImg');
+        $this->modulesArr['topic'] = array('activities','topicInfo', 'addTopic', 'editTopic', 'delTopic', 'uploadImg');
         $this->modulesArr['article'] = array('articleInfo', 'addArticle', 'delArticle', 'uploadImg');
         $this->modulesArr['banner'] = array('bannerInfo', 'addBanner', 'changeBannerLevel', 'delBanner', 'uploadImg');
         $this->modulesArr['userStatistics'] = array('userAttendTotal', 'newAddUser', 'userSource', 'gameStatistics', 'activityStatistics');
