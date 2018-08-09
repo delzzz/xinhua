@@ -62,15 +62,15 @@ class Controller extends BaseController
                 echo json_encode($msg, JSON_UNESCAPED_UNICODE);
                 exit();
             }
-//            if ($tokenArr[0] !== $request->header('user_agent')) {
+            if ($tokenArr[0] !== $request->header('user_agent')) {
 //                $msg['success'] = -2;
 //                $msg['msg'] = '浏览器不一致';
 //                echo json_encode($tokenArr, JSON_UNESCAPED_UNICODE);
 //                echo json_encode($msg, JSON_UNESCAPED_UNICODE);
 //                exit();
-//            } else {
-//                $this->userAgent = $tokenArr[0];
-//            }
+            } else {
+                $this->userAgent = $tokenArr[0];
+            }
             if (!empty($userArr->user_id)) {
                 $cache_token = C::get($userArr->user_id);
                 if(!$cache_token){
