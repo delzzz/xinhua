@@ -9,7 +9,7 @@ class Activity extends Model
 {
     use SoftDeletes;
     protected $table = 'activity';
-    protected $fillable = ['name', 'picture', 'url', 'level', 'status', 'appid', 'appsecret', 'description', 'uid'];
+    protected $fillable = ['name', 'picture', 'url', 'level', 'status', 'appid', 'appsecret', 'description', 'uid','tag_id'];
     protected $dates = ['deleted_at'];
 
     //用户
@@ -56,5 +56,20 @@ class Activity extends Model
         } else {
             return false;
         }
+    }
+
+    //活动专题设置h5链接id
+    function setActivityInfo($itemId,$topicId){
+        $activityInfo = $this->getInfo($itemId);
+        $arr['topic_id'] = $topicId;
+        $arr['itemid'] = $itemId;
+        $arr['name'] = $activityInfo->name;
+        $arr['picture'] = $activityInfo->picture;
+        $arr['type'] = 'activity';
+        $arr['status'] = $activityInfo->status;
+        $arr['url'] = $activityInfo->url;
+        $arr['tag_id'] = $activityInfo->tag_id;
+        $arr['description'] = $activityInfo->description;
+        return $arr;
     }
 }

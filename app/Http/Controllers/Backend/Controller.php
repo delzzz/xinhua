@@ -44,6 +44,8 @@ class Controller extends BaseController
         $this->modulesArr['banner'] = array('bannerInfo', 'addBanner', 'changeBannerLevel', 'delBanner', 'uploadImg');
         $this->modulesArr['userStatistics'] = array('userAttendTotal', 'newAddUser', 'userSource', 'gameStatistics', 'activityStatistics');
         $this->modulesArr['gameStatistics'] = array('regionScoreTotal', 'userScoreList', 'gameTotalList');
+        $this->modulesArr['tag'] = array('addTag','delTag');
+
         if (!empty($this->pathArr) && !in_array($request->path(), $this->pathArr)) {
             $token = $request->header('token');
             if (empty($token) || $token == NULL) {

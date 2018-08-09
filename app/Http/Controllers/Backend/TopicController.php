@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Activity;
 use App\Game;
+use App\Tag;
 use Illuminate\Http\Request;
 use App\Topic;
 use App\AdminUser;
@@ -28,7 +29,7 @@ class TopicController extends Controller
         $topic = new Topic();
         $topics = $topic->where(function ($query) use ($key) {
             $key && $query->where('name', 'like', '%' . $key . '%');
-        })->orderBy('level', 'asc')->paginate($perPage, ['id', 'name', 'description', 'url', 'level', 'click', 'is_link', 'uid', 'created_at', 'picture'], 'p', $p);
+        })->where('status', 1)->orderBy('level', 'asc')->paginate($perPage, ['id', 'name', 'description', 'url', 'level', 'click', 'uid', 'created_at', 'picture'], 'p', $p);
         $admin = new AdminUser();
         foreach ($topics as $key => $topic) {
             $topics[$key]['adminUser'] = $admin->getUsername($topic->uid);
@@ -42,59 +43,51 @@ class TopicController extends Controller
         $userId = $this->userId;
         $this->validate($request, [
             'name' => 'required',
-            'is_link' => 'required',
-            'url' => 'required'
+            //'is_link' => 'required',
+            //'url' => 'required',
+            //'content'=>'required'
+            //'type' => 'required',
+            //'item_ids' => 'required',
         ]);
         $name = $request->input('name');
-        $isLink = $request->input('is_link');
+        //$isLink = $request->input('is_link');
         $fields = $request->all();
         $fields['uid'] = $userId;
-        if ($isLink == 1) {
-            //链接
-            $topic = Topic::create($fields);
-        } else {
-            //活动/游戏
+//        if ($isLink == 1) {
+//            //链接
+//            $topic = Topic::create($fields);
+//        } else {
+        //活动/游戏
+
+        $topic = Topic::create($fields);
+        $topicId = $topic->id;
+        //$itemIds = $request->input('item_ids');
+        //$type = $request->input('type');
+        //if (!empty($itemIds)) {
+        //$itemIdArr = explode(',', $itemIds);
+        if ($name !== '排行榜') {
             $this->validate($request, [
-                'type' => 'required',
-                'item_ids' => 'required',
+                'content' => 'required',
             ]);
-            $topic = Topic::create($fields);
-            $topicId = $topic->id;
-            $itemIds = $request->input('item_ids');
-            $type = $request->input('type');
-            if (!empty($itemIds)) {
-                $itemIdArr = explode(',', $itemIds);
-                $topicLink = new TopicLink();
-                foreach ($itemIdArr as $key => $itemid) {
-                    if ($type == 'game') {
-                        $game = new Game();
-                        $gameInfo = $game->getInfo($itemid);
-                        $arr['topic_id'] = $topicId;
-                        $arr['itemid'] = $itemid;
-                        $arr['name'] = $gameInfo->name;
-                        $arr['picture'] = $gameInfo->picture;
-                        $arr['type'] = 'game';
-                        $arr['status'] = $gameInfo->status;
-                        $arr['url'] = $gameInfo->url;
-                        $arr['description'] = $gameInfo->description;
-                        $arr['level'] = $key;
-                    } elseif ($type == 'activity') {
-                        $activity = new Activity();
-                        $activityInfo = $activity->getInfo($itemid);
-                        $arr['topic_id'] = $topicId;
-                        $arr['itemid'] = $itemid;
-                        $arr['name'] = $activityInfo->name;
-                        $arr['picture'] = $activityInfo->picture;
-                        $arr['type'] = 'activity';
-                        $arr['status'] = $activityInfo->status;
-                        $arr['url'] = $activityInfo->url;
-                        $arr['description'] = $activityInfo->description;
-                        $arr['level'] = $key;
-                    }
-                    $topic = $topicLink->create($arr);
+        }
+        $content = $request->input('content');
+        if(!empty($content)){
+            $tpArr = json_decode($content);
+            $topicLink = new TopicLink();
+            foreach ($tpArr as $key => $tpItem) {
+                if ($tpItem->type == 'game') {
+                    $game = new Game();
+                    $arr = $game->setGameInfo($tpItem->item_id,$topicId);
+                    $arr['level'] = $key;
+                } elseif ($tpItem->type == 'activity') {
+                    $activity = new Activity();
+                    $arr = $activity->setActivityInfo($tpItem->item_id,$topicId);
+                    $arr['level'] = $key;
                 }
+                $topic = $topicLink->create($arr);
             }
         }
+        Topic::find($topic['topic_id'])->update(array('url'=>'http://xinhua.test.qyuedai.com/topicLinkList?topic_id='.$topic['topic_id']));
         $description = '添加活动专题' . $name;
         if ($topic) {
             $msg['success'] = 1;
@@ -116,65 +109,32 @@ class TopicController extends Controller
     {
         $this->validate($request, [
             'topic_id' => 'required',
-            'is_link' => 'required',
+            //'is_link' => 'required',
         ]);
         $topicId = $request->input('topic_id');
         $fields = $request->all();
-        $isLink = $request->input('is_link');
+        //$isLink = $request->input('is_link');
         $tp = new Topic();
+        $topicLink = new TopicLink();
         $info = $tp->info($topicId);
         $description = '修改活动专题' . $info->name;
         $topic = Topic::find($topicId)->update($fields);
-        if ($isLink == 1) {
-            //链接
+        $content = $request->input('content');
+        if(!empty($content)){
+            $tpArr = json_decode($content);
             //删除
             TopicLink::where('topic_id', $topicId)->delete();
-        } else {
-            //活动/游戏
-            $itemIds = $request->input('item_ids');
-            $type = $request->input('type');
-            //原来的itemIds
-            $oldItemIds = TopicLink::where('topic_id', $topicId)->pluck('itemid');
-            $oldType = TopicLink::where('topic_id', $topicId)->value('type');
-            $oldItemStr = '';
-            foreach ($oldItemIds as $oldItemId) {
-                $oldItemStr .= $oldItemId . ',';
-            }
-            if (!empty($itemIds) && !empty($type)) {
-                if (substr($oldItemStr, 0, strlen($oldItemStr) - 1) == $itemIds && $oldType == $type) {
-                    $topic = true;
-                } else {
-                    //删除
-                    TopicLink::where('topic_id', $topicId)->delete();
-                    $itemIdArr = explode(',', $itemIds);
-                    $topicLink = new TopicLink();
-                    foreach ($itemIdArr as $key => $itemid) {
-                        $arr['topic_id'] = $topicId;
-                        $arr['itemid'] = $itemid;
-                        if ($type == 'game') {
-                            $game = new Game();
-                            $gameInfo = $game->getInfo($itemid);
-                            $arr['name'] = $gameInfo->name;
-                            $arr['picture'] = $gameInfo->picture;
-                            $arr['type'] = 'game';
-                            $arr['status'] = $gameInfo->status;
-                            $arr['url'] = $gameInfo->url;
-                            $arr['description'] = $gameInfo->description;
-                            $arr['level'] = $key;
-                        } elseif ($type == 'activity') {
-                            $activity = new Activity();
-                            $activityInfo = $activity->getInfo($itemid);
-                            $arr['name'] = $activityInfo->name;
-                            $arr['picture'] = $activityInfo->picture;
-                            $arr['type'] = 'activity';
-                            $arr['status'] = $activityInfo->status;
-                            $arr['url'] = $activityInfo->url;
-                            $arr['description'] = $activityInfo->description;
-                            $arr['level'] = $key;
-                        }
-                        $topic = $topicLink->create($arr);
-                    }
+            foreach ($tpArr as $key => $tpItem) {
+                if ($tpItem->type == 'game') {
+                    $game = new Game();
+                    $arr = $game->setGameInfo($tpItem->item_id,$topicId);
+                    $arr['level'] = $key;
+                } elseif ($tpItem->type == 'activity') {
+                    $activity = new Activity();
+                    $arr = $activity->setActivityInfo($tpItem->item_id,$topicId);
+                    $arr['level'] = $key;
                 }
+                $topic = $topicLink->create($arr);
             }
         }
         if ($topic) {
@@ -229,19 +189,22 @@ class TopicController extends Controller
         $topicArr[0]['name'] = $info->name;
         $topicArr[0]['description'] = $info->description;
         $topicArr[0]['url'] = $info->url;
-        $topicArr[0]['is_link'] = $info->is_link;
-        if ($info->is_link == 0) {
+        //$topicArr[0]['is_link'] = $info->is_link;
+        //if ($info->is_link == 0) {
             $topicLink = new TopicLink();
             $linkList = $topicLink->lists($topicId);
             $itemList = array();
+        $tag = new Tag();
             foreach ($linkList as $key => $value) {
                 $itemList[$key]['picture'] = $value->picture;
                 $itemList[$key]['name'] = $value->name;
                 $itemList[$key]['url'] = $value->url;
                 $itemList[$key]['description'] = $value->description;
+                $itemList[$key]['tag_id'] = $value->tag_id;
+                $itemList[$key]['tag_info'] = $tag->getTagNames($value->tag_id);
                 $itemList[$key]['type'] = $value->type;
             }
-        }
+        //}
         $topicArr[0]['itemList'] = $itemList;
         return json_encode($topicArr, JSON_UNESCAPED_UNICODE);
     }
@@ -263,5 +226,6 @@ class TopicController extends Controller
         }
         return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
+
 
 }

@@ -8,7 +8,7 @@ class Game extends Model
 {
     use SoftDeletes;
     protected $table = 'game';
-    protected $fillable = ['name','picture','url','level','status','appid','appsecret','description','uid'];
+    protected $fillable = ['name','picture','url','level','status','appid','appsecret','description','uid','tag_id'];
     protected $dates = ['deleted_at'];
 
     //用户
@@ -58,5 +58,20 @@ class Game extends Model
         } else {
             return false;
         }
+    }
+
+    //活动专题设置游戏信息
+    function setGameInfo($itemId,$topicId){
+        $gameInfo = $this->getInfo($itemId);
+        $arr['topic_id'] = $topicId;
+        $arr['itemid'] = $itemId;
+        $arr['name'] = $gameInfo->name;
+        $arr['picture'] = $gameInfo->picture;
+        $arr['type'] = 'game';
+        $arr['status'] = $gameInfo->status;
+        $arr['url'] = $gameInfo->url;
+        $arr['tag_id'] = $gameInfo->tag_id;
+        $arr['description'] = $gameInfo->description;
+        return $arr;
     }
 }

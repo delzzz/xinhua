@@ -22,12 +22,12 @@ class TopicController extends Controller
         $perPage = $request->input('per_page')??15;
         $topic = new Topic();
         $topicList = array();
-        $topics = $topic->orderBy('level','asc')->paginate($perPage, ['id','name', 'url','is_link'], 'p', $p);
+        $topics = $topic->where('status',1)->orderBy('level','asc')->paginate($perPage, ['id','name', 'url'], 'p', $p);
         foreach ($topics as $key => $topic) {
             $topicList[$key]['id'] = $topic->id;
             $topicList[$key]['name'] = $topic->name;
             $topicList[$key]['url'] = $topic->url;
-            $topicList[$key]['is_link'] = $topic->is_link;
+            //$topicList[$key]['is_link'] = $topic->is_link;
         }
         echo json_encode($topicList, JSON_UNESCAPED_UNICODE);
     }

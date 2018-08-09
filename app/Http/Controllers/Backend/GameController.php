@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\AdminUser;
+use App\Tag;
 use Illuminate\Http\Request;
 use App\Game;
 use App\Post;
@@ -15,7 +16,7 @@ class GameController extends Controller
 {
     function __construct(Request $request)
     {
-        $this->pathArr = array('gameList','allGameList');
+        $this->pathArr = array('gameList', 'allGameList');
         parent::__construct($request);
     }
 
@@ -28,7 +29,7 @@ class GameController extends Controller
         $game = new Game();
         $games = $game->where(function ($query) use ($key) {
             $key && $query->where('name', 'like', '%' . $key . '%');
-        })->paginate($perPage, ['id', 'name', 'picture', 'url','created_at','description','uid','status'], 'p', $p);
+        })->paginate($perPage, ['id', 'name', 'picture', 'url', 'created_at', 'description', 'uid', 'status'], 'p', $p);
         $admin = new AdminUser();
         foreach ($games as $key => $game) {
             $games[$key]['adminUser'] = $admin->getUsername($game->uid);
@@ -37,14 +38,14 @@ class GameController extends Controller
     }
 
     //游戏详情
-    function info(Request $request){
+    function info(Request $request)
+    {
         $this->validate($request, [
             'id' => 'required']);
         $id = $request->input('id');
         $game = new Game();
-        return json_encode($game->getInfo($id),JSON_UNESCAPED_UNICODE);
+        return json_encode($game->getInfo($id), JSON_UNESCAPED_UNICODE);
     }
-
 
 
     //新增/修改游戏
@@ -55,7 +56,7 @@ class GameController extends Controller
         $id = $request->input('id');
         $appId = $request->input('appid');
         $game = new Game();
-        if(!$id){
+        if (!$id) {
             $this->validate($request, [
                 'name' => 'required',
                 'picture' => 'required',
@@ -64,23 +65,24 @@ class GameController extends Controller
                 'appsecret' => 'required'
             ]);
             //appId重复
-            if($game->checkAppID($appId)){
+            if ($game->checkAppID($appId)) {
                 $msg['success'] = -1;
                 $msg['msg'] = 'appID重复';
                 return json_encode($msg, JSON_UNESCAPED_UNICODE);
             }
             $fields['uid'] = $userId;
-            $description = '添加游戏'.$request->input('name');
-        }
-        else{
-            //appId重复
-            if($game->checkAppID($appId,$id)){
-                $msg['success'] = -1;
-                $msg['msg'] = 'appID重复';
-                return json_encode($msg, JSON_UNESCAPED_UNICODE);
+            $description = '添加游戏' . $request->input('name');
+        } else {
+            if (!empty($appId)) {
+                //appId重复
+                if ($game->checkAppID($appId, $id)) {
+                    $msg['success'] = -1;
+                    $msg['msg'] = 'appID重复';
+                    return json_encode($msg, JSON_UNESCAPED_UNICODE);
+                }
             }
             $info = $game->getInfo($id);
-            $description = '修改游戏'.$info->name;
+            $description = '修改游戏' . $info->name;
         }
         $game = Game::updateOrCreate(
             ['id' => $id],
@@ -88,20 +90,21 @@ class GameController extends Controller
         );
         if ($game->save()) {
             $msg['success'] = 1;
-            $msg['msg'] = $description.'成功';
+            $msg['msg'] = $description . '成功';
             $type = 1;
         } else {
             $msg['success'] = 0;
             $type = 0;
-            $msg['msg'] = $description.'失败';
+            $msg['msg'] = $description . '失败';
         }
         $log = new Log();
-        $log->addLog($this->userId,$description,$msg['success'],$type);
+        $log->addLog($this->userId, $description, $msg['success'], $type);
         return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //改变状态
-    function changeStatus(Request $request){
+    function changeStatus(Request $request)
+    {
         $this->validate($request, [
             'id' => 'required',
             'status' => 'required',
@@ -110,53 +113,53 @@ class GameController extends Controller
         $status = $request->input('status');
         $game = new Game();
         $info = $game->getInfo($id);
-        if($status ==1){
-            $description = '上架游戏'.$info->name;
+        if ($status == 1) {
+            $description = '上架游戏' . $info->name;
+        } else {
+            $description = '下架游戏' . $info->name;
         }
-        else{
-            $description = '下架游戏'.$info->name;
-        }
-        if($game->changeStatus($id,$status)){
+        if ($game->changeStatus($id, $status)) {
             $msg['success'] = 1;
-            $msg['msg'] = $description.'成功';
+            $msg['msg'] = $description . '成功';
             $type = 1;
-        }
-        else{
+        } else {
             $msg['success'] = 0;
-            $msg['msg'] = $description.'失败';
+            $msg['msg'] = $description . '失败';
             $type = 0;
         }
         $log = new Log();
-        $log->addLog($this->userId,$description,$msg['success'],$type);
+        $log->addLog($this->userId, $description, $msg['success'], $type);
         return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //删除游戏
-    function del(Request $request){
+    function del(Request $request)
+    {
         $id = $request->input('id');
         $game = new Game();
         $info = $game->getInfo($id);
-        $description = '删除游戏'.$info->name;
-        if($game->del($id)){
+        $description = '删除游戏' . $info->name;
+        if ($game->del($id)) {
             $msg['success'] = 1;
-            $msg['msg'] = $description.'成功';
+            $msg['msg'] = $description . '成功';
             $type = 1;
-        }
-        else{
+        } else {
             $msg['success'] = 0;
-            $msg['msg'] = $description.'失败';
+            $msg['msg'] = $description . '失败';
             $type = 0;
         }
         $log = new Log();
-        $log->addLog($this->userId,$description,$msg['success'],$type);
-        return json_encode($msg,JSON_UNESCAPED_UNICODE);
+        $log->addLog($this->userId, $description, $msg['success'], $type);
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
     //所有游戏列表
-    function allList(){
+    function allList()
+    {
         $game = new Game();
         $gameList = array();
         $games = $game->getList();
+        $tag = new Tag();
         //$admin = new AdminUser();
         foreach ($games as $key => $game) {
             $gameList[$key]['id'] = $game->id;
@@ -164,6 +167,7 @@ class GameController extends Controller
             $gameList[$key]['picture'] = $game->picture;
             $gameList[$key]['url'] = $game->url;
             $gameList[$key]['description'] = $game->description;
+            $gameList[$key]['tag_info'] = $tag->getTagNames($game->tag_id);
             //$gameList[$key]['adminUser'] = $admin->getUsername($game->uid);
         }
         echo json_encode($gameList, JSON_UNESCAPED_UNICODE);

@@ -133,6 +133,15 @@ Route::post('/changeGameStatus', 'GameController@changeStatus');
 //删除游戏
 Route::post('/delGame', 'GameController@del');
 
+//标签列表
+Route::get('/tagList','TagController@lists');
+//添加标签
+Route::post('/addTag','TagController@add');
+//删除标签
+Route::post('/delTag','TagController@del');
+//标签详情
+Route::get('/tagInfo','TagController@info');
+
 //图片上传
 Route::post('/uploadImg', 'PictureController@upload');
 

@@ -10,12 +10,12 @@ class Topic extends Model
 {
     use SoftDeletes;
     protected $table = 'topic';
-    protected $fillable = ['name', 'description', 'url', 'level','click','is_link','uid','picture'];
+    protected $fillable = ['name', 'description', 'url', 'level','click','is_link','uid','picture','status'];
     protected $dates = ['deleted_at'];
 
     //活动列表
     function lists(){
-        return Topic::where('level','asc')->get();
+        return Topic::where(['level'=>'asc','status'=>1])->get();
     }
 
     //删除活动

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Log;
+use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Activity;
@@ -44,10 +45,12 @@ class ActivityController extends Controller
         }
         else{
             //appId重复
-            if($activity->checkAppID($appId,$id)){
-                $msg['success'] = -1;
-                $msg['msg'] = 'appID重复';
-                return json_encode($msg, JSON_UNESCAPED_UNICODE);
+            if(!empty($appId)){
+                if($activity->checkAppID($appId,$id)){
+                    $msg['success'] = -1;
+                    $msg['msg'] = 'appID重复';
+                    return json_encode($msg, JSON_UNESCAPED_UNICODE);
+                }
             }
             $info = $activity->getInfo($id);
             $description = '修改H5链接'.$info->name;
@@ -159,6 +162,7 @@ class ActivityController extends Controller
         $activity = new Activity();
         $activityList = array();
         $activities = $activity->getList();
+        $tag = new Tag();
         //$admin = new AdminUser();
         foreach ($activities as $key => $activity) {
             $activityList[$key]['id'] = $activity->id;
@@ -166,6 +170,7 @@ class ActivityController extends Controller
             $activityList[$key]['picture'] = $activity->picture;
             $activityList[$key]['url'] = $activity->url;
             $activityList[$key]['description'] = $activity->description;
+            $activityList[$key]['tag_info'] = $tag->getTagNames($activity->tag_id);
             //$activityList[$key]['adminUser'] = $admin->getUsername($activity->uid);
         }
         return json_encode($activityList, JSON_UNESCAPED_UNICODE);

@@ -9,7 +9,7 @@ class TopicLink extends Model
 {
     use SoftDeletes;
     protected $table = 'topic_link';
-    protected $fillable = ['level','description','topic_id','name','picture','type','url','itemid'];
+    protected $fillable = ['level','description','topic_id','name','picture','type','url','itemid','tag_id'];
     protected $dates = ['deleted_at'];
 
 //    function lists($p,$perPage){
