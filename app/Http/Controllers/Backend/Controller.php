@@ -65,6 +65,7 @@ class Controller extends BaseController
             if ($tokenArr[0] !== $request->header('user_agent')) {
                 $msg['success'] = -2;
                 $msg['msg'] = '浏览器不一致';
+                echo json_encode($tokenArr, JSON_UNESCAPED_UNICODE);
                 echo json_encode($msg, JSON_UNESCAPED_UNICODE);
                 exit();
             } else {
