@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Tag;
 use App\TopicLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -57,13 +58,16 @@ class TopicController extends Controller
         $perPage = $request->input('per_page')??15;
         $topicId = $request->input('topic_id');
         $topicList = array();
-        $topicArr = TopicLink::where(['topic_id'=>$topicId,'status'=>1])->orderBy('level','asc')->orderBy('created_at','desc')->paginate($perPage, ['id', 'name', 'picture','url','itemid','type'], 'p', $p);
+        $tag = new Tag();
+        $topicArr = TopicLink::where(['topic_id'=>$topicId,'status'=>1])->orderBy('level','asc')->orderBy('created_at','desc')->paginate($perPage, ['id', 'name', 'picture','url','itemid','type','tag_id'], 'p', $p);
         foreach ($topicArr as $key => $value){
             $topicList[$key]['id'] = $value->itemid;
             $topicList[$key]['name'] = $value->name;
             $topicList[$key]['picture'] = $value->picture;
             $topicList[$key]['url'] = $value->url;
             $topicList[$key]['type'] = $value->type;
+            $topicList[$key]['tag_id'] = $value->tag_id;
+            $topicList[$key]['tag_info'] = $tag->getTagNames($value->tag_id);
             if ($value->type == 'game') {
                 $gameList = Redis::Zrange('gameTotalRanking', 0, -1, 'WITHSCORES');
                 $total = $gameList[$value->itemid]??0;
