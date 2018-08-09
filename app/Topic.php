@@ -38,4 +38,9 @@ class Topic extends Model
     function addClick($topicId){
         return Topic::where('id',$topicId)->increment('click',1);
     }
+
+    //上下架专题
+    function changeStatus($id,$status){
+        return Topic::find($id)->update(['status' => $status]);
+    }
 }

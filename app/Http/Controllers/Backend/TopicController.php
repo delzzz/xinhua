@@ -43,28 +43,12 @@ class TopicController extends Controller
         $userId = $this->userId;
         $this->validate($request, [
             'name' => 'required',
-            //'is_link' => 'required',
-            //'url' => 'required',
-            //'content'=>'required'
-            //'type' => 'required',
-            //'item_ids' => 'required',
         ]);
         $name = $request->input('name');
-        //$isLink = $request->input('is_link');
         $fields = $request->all();
         $fields['uid'] = $userId;
-//        if ($isLink == 1) {
-//            //链接
-//            $topic = Topic::create($fields);
-//        } else {
-        //活动/游戏
-
         $topic = Topic::create($fields);
         $topicId = $topic->id;
-        //$itemIds = $request->input('item_ids');
-        //$type = $request->input('type');
-        //if (!empty($itemIds)) {
-        //$itemIdArr = explode(',', $itemIds);
         if ($name !== '排行榜') {
             $this->validate($request, [
                 'content' => 'required',
@@ -87,7 +71,7 @@ class TopicController extends Controller
                 $topic = $topicLink->create($arr);
             }
         }
-        Topic::find($topic['topic_id'])->update(array('url'=>'http://xinhua.test.qyuedai.com/topicLinkList?topic_id='.$topic['topic_id']));
+        Topic::find($topic['topic_id'])->update(array('url'=>env('TOPIC_URL').$topic['topic_id']));
         $description = '添加活动专题' . $name;
         if ($topic) {
             $msg['success'] = 1;
@@ -227,5 +211,35 @@ class TopicController extends Controller
         return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
+    //上下架专题
+    function changeTopicStatus(Request $request){
+        $this->validate($request, [
+            'id' => 'required',
+            'status' => 'required',
+        ]);
+        $id = $request->input('id');
+        $status = $request->input('status');
+        $topic = new Topic();
+        $info = $topic->info($id);
+        if($status==1){
+            $description = '上架专题'.$info->name;
+        }
+        else{
+            $description = '下架专题'.$info->name;
+        }
+        if($topic->changeStatus($id,$status)){
+            $msg['success'] = 1;
+            $msg['msg'] = $description.'成功';
+            $type = 1;
+        }
+        else{
+            $msg['success'] = 0;
+            $msg['msg'] = $description.'失败';
+            $type = 0;
+        }
+        $log = new Log();
+        $log->addLog($this->userId,$description,$msg['success'],$type);
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
+    }
 
 }

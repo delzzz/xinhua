@@ -103,6 +103,8 @@ Route::post('/editTopic', 'TopicController@edit');
 Route::get('/topicInfo', 'TopicController@info');
 //删除活动专题
 Route::post('/delTopic', 'TopicController@del');
+//上下架专题
+Route::post('/changeTopicStatus','TopicController@changeTopicStatus');
 //点击专题次数增加
 Route::get('/topicAddClick', 'TopicController@addClick');
 //所有游戏列表
