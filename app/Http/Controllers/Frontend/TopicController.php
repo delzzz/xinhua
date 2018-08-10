@@ -59,7 +59,7 @@ class TopicController extends Controller
         $topicId = $request->input('topic_id');
         $topicList = array();
         $tag = new Tag();
-        $topicArr = TopicLink::where(['topic_id'=>$topicId,'status'=>1])->orderBy('level','asc')->orderBy('created_at','desc')->paginate($perPage, ['id', 'name', 'picture','url','itemid','type','tag_id','description'], 'p', $p);
+        $topicArr = TopicLink::where(['topic_id'=>$topicId,'status'=>1])->orderBy('level','asc')->orderBy('created_at','desc')->paginate($perPage, ['id', 'name', 'picture','url','itemid','type','tag_id'], 'p', $p);
         foreach ($topicArr as $key => $value){
             $topicList[$key]['id'] = $value->itemid;
             $topicList[$key]['name'] = $value->name;
