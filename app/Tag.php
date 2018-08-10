@@ -47,8 +47,8 @@ class Tag extends Model
         $tagArr = array();
         foreach ($strArr as $key=>$id){
             $tagInfo = $this->getInfo($id);
-            $tagName.= $tagInfo->tag_name.',';
-            $tagColor.= $tagInfo->color.',';
+            $tagName= $tagInfo['tag_name'];
+            $tagColor= $tagInfo['color'];
             $tagArr[$key]['tag_name'] = $tagName;
             $tagArr[$key]['color'] = $tagColor;
         }
