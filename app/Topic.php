@@ -10,7 +10,7 @@ class Topic extends Model
 {
     use SoftDeletes;
     protected $table = 'topic';
-    protected $fillable = ['name', 'description', 'url', 'level','click','is_link','uid','picture','status'];
+    protected $fillable = ['name', 'description', 'url', 'level','click','is_link','uid','picture','status','icon'];
     protected $dates = ['deleted_at'];
 
     //活动列表
