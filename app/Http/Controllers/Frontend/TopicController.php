@@ -23,9 +23,10 @@ class TopicController extends Controller
         $perPage = $request->input('per_page')??15;
         $topic = new Topic();
         $topicList = array();
-        $topics = $topic->where('status',1)->orderBy('level','asc')->paginate($perPage, ['id','name', 'url'], 'p', $p);
+        $topics = $topic->where('status',1)->orderBy('level','asc')->paginate($perPage, ['id','name', 'url','icon'], 'p', $p);
         foreach ($topics as $key => $topic) {
             $topicList[$key]['id'] = $topic->id;
+            $topicList[$key]['icon'] = $topic->icon;
             $topicList[$key]['name'] = $topic->name;
             $topicList[$key]['url'] = $topic->url;
             //$topicList[$key]['is_link'] = $topic->is_link;

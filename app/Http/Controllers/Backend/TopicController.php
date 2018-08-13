@@ -29,7 +29,7 @@ class TopicController extends Controller
         $topic = new Topic();
         $topics = $topic->where(function ($query) use ($key) {
             $key && $query->where('name', 'like', '%' . $key . '%');
-        })->where('status', 1)->orderBy('level', 'asc')->paginate($perPage, ['id', 'name', 'description', 'url', 'level', 'click', 'uid', 'created_at', 'picture'], 'p', $p);
+        })->orderBy('level', 'asc')->paginate($perPage, ['id','icon', 'name', 'description', 'url', 'level', 'click', 'uid', 'created_at', 'picture','status'], 'p', $p);
         $admin = new AdminUser();
         foreach ($topics as $key => $topic) {
             $topics[$key]['adminUser'] = $admin->getUsername($topic->uid);
@@ -181,6 +181,7 @@ class TopicController extends Controller
         $tag = new Tag();
             foreach ($linkList as $key => $value) {
                 $itemList[$key]['picture'] = $value->picture;
+                $itemList[$key]['icon'] = $value->icon;
                 $itemList[$key]['name'] = $value->name;
                 $itemList[$key]['url'] = $value->url;
                 $itemList[$key]['description'] = $value->description;

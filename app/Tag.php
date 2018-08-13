@@ -16,7 +16,7 @@ class Tag extends Model
     //标签列表
     function lists()
     {
-        $tag = Tag::select('tag_name','created_at','uid','color')->get();
+        $tag = Tag::select('id','tag_name','created_at','uid','color')->get();
         return $tag;
     }
 
