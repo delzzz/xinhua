@@ -173,6 +173,7 @@ class TopicController extends Controller
         $topicArr[0]['name'] = $info->name;
         $topicArr[0]['description'] = $info->description;
         $topicArr[0]['url'] = $info->url;
+        $topicArr[0]['icon'] = $info->icon;
         //$topicArr[0]['is_link'] = $info->is_link;
         //if ($info->is_link == 0) {
             $topicLink = new TopicLink();
@@ -181,7 +182,6 @@ class TopicController extends Controller
         $tag = new Tag();
             foreach ($linkList as $key => $value) {
                 $itemList[$key]['picture'] = $value->picture;
-                $itemList[$key]['icon'] = $value->icon;
                 $itemList[$key]['name'] = $value->name;
                 $itemList[$key]['url'] = $value->url;
                 $itemList[$key]['description'] = $value->description;
