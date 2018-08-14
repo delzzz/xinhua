@@ -59,13 +59,13 @@ class TopicController extends Controller
             $tpArr = json_decode($content);
             $topicLink = new TopicLink();
             foreach ($tpArr as $key => $tpItem) {
-                if ($tpItem->type == 'game') {
+                if ($tpItem['type'] == 'game') {
                     $game = new Game();
-                    $arr = $game->setGameInfo($tpItem->item_id,$topicId);
+                    $arr = $game->setGameInfo($tpItem['item_id'],$topicId);
                     $arr['level'] = $key;
-                } elseif ($tpItem->type == 'activity') {
+                } elseif ($tpItem['type'] == 'activity') {
                     $activity = new Activity();
-                    $arr = $activity->setActivityInfo($tpItem->item_id,$topicId);
+                    $arr = $activity->setActivityInfo($tpItem['item_id'],$topicId);
                     $arr['level'] = $key;
                 }
                 $topic = $topicLink->create($arr);
@@ -181,6 +181,7 @@ class TopicController extends Controller
             $itemList = array();
         $tag = new Tag();
             foreach ($linkList as $key => $value) {
+                $itemList[$key]['id'] = $value->id;
                 $itemList[$key]['picture'] = $value->picture;
                 $itemList[$key]['name'] = $value->name;
                 $itemList[$key]['url'] = $value->url;
