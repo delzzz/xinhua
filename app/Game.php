@@ -65,13 +65,13 @@ class Game extends Model
         $gameInfo = $this->getInfo($itemId);
         $arr['topic_id'] = $topicId;
         $arr['itemid'] = $itemId;
-        $arr['name'] = $gameInfo->name;
-        $arr['picture'] = $gameInfo->picture;
+        $arr['name'] = $gameInfo['name'];
+        $arr['picture'] = $gameInfo['picture'];
         $arr['type'] = 'game';
-        $arr['status'] = $gameInfo->status;
-        $arr['url'] = $gameInfo->url;
-        $arr['tag_id'] = $gameInfo->tag_id;
-        $arr['description'] = $gameInfo->description;
+        $arr['status'] = $gameInfo['status'];
+        $arr['url'] = $gameInfo['url'];
+        $arr['tag_id'] = $gameInfo['tag_id'];
+        $arr['description'] = $gameInfo['description'];
         return $arr;
     }
 }

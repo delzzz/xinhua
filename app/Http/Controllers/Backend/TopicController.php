@@ -56,7 +56,7 @@ class TopicController extends Controller
         }
         $content = $request->input('content');
         if(!empty($content)){
-            $tpArr = json_decode($content);
+            $tpArr = json_decode($content,true);
             $topicLink = new TopicLink();
             foreach ($tpArr as $key => $tpItem) {
                 if ($tpItem['type'] == 'game') {
@@ -105,17 +105,17 @@ class TopicController extends Controller
         $topic = Topic::find($topicId)->update($fields);
         $content = $request->input('content');
         if(!empty($content)){
-            $tpArr = json_decode($content);
+            $tpArr = json_decode($content,true);
             //删除
             TopicLink::where('topic_id', $topicId)->delete();
             foreach ($tpArr as $key => $tpItem) {
-                if ($tpItem->type == 'game') {
+                if ($tpItem['type'] == 'game') {
                     $game = new Game();
-                    $arr = $game->setGameInfo($tpItem->item_id,$topicId);
+                    $arr = $game->setGameInfo($tpItem['item_id'],$topicId);
                     $arr['level'] = $key;
-                } elseif ($tpItem->type == 'activity') {
+                } elseif ($tpItem['type'] == 'activity') {
                     $activity = new Activity();
-                    $arr = $activity->setActivityInfo($tpItem->item_id,$topicId);
+                    $arr = $activity->setActivityInfo($tpItem['item_id'],$topicId);
                     $arr['level'] = $key;
                 }
                 $topic = $topicLink->create($arr);

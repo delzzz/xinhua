@@ -63,13 +63,13 @@ class Activity extends Model
         $activityInfo = $this->getInfo($itemId);
         $arr['topic_id'] = $topicId;
         $arr['itemid'] = $itemId;
-        $arr['name'] = $activityInfo->name;
-        $arr['picture'] = $activityInfo->picture;
+        $arr['name'] = $activityInfo['name'];
+        $arr['picture'] = $activityInfo['picture'];
         $arr['type'] = 'activity';
-        $arr['status'] = $activityInfo->status;
-        $arr['url'] = $activityInfo->url;
-        $arr['tag_id'] = $activityInfo->tag_id;
-        $arr['description'] = $activityInfo->description;
+        $arr['status'] = $activityInfo['status'];
+        $arr['url'] = $activityInfo['url'];
+        $arr['tag_id'] = $activityInfo['tag_id'];
+        $arr['description'] = $activityInfo['description'];
         return $arr;
     }
 }
