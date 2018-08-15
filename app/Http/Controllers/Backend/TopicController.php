@@ -181,7 +181,7 @@ class TopicController extends Controller
             $itemList = array();
         $tag = new Tag();
             foreach ($linkList as $key => $value) {
-                $itemList[$key]['id'] = $value->id;
+                $itemList[$key]['id'] = $value->itemid;
                 $itemList[$key]['picture'] = $value->picture;
                 $itemList[$key]['name'] = $value->name;
                 $itemList[$key]['url'] = $value->url;
