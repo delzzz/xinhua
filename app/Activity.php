@@ -72,4 +72,15 @@ class Activity extends Model
         $arr['description'] = $activityInfo['description'];
         return $arr;
     }
+
+    //判断标签是否有用到
+    function tagIsUsed($tagId){
+        $count = \DB::select('SELECT count(id) as total FROM activity WHERE FIND_IN_SET('.$tagId.', tag_id)')[0];
+        if($count->total>0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

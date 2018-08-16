@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Activity;
 use App\AdminUser;
+use App\Game;
 use Illuminate\Http\Request;
 use App\Tag;
 use App\Log;
@@ -72,8 +74,16 @@ class TagController extends Controller
         ]);
         $id = $request->input('id');
         $tag = new Tag();
+        $game = new Game();
+        $activity = new Activity();
+        if($game->tagIsUsed($id) || $activity->tagIsUsed($id)){
+            $msg['success'] = -1;
+            $msg['msg'] = '活动或游戏使用该标签，不可删除';
+            return $msg;
+            exit();
+        }
         $info = $tag->getInfo($id);
-        $description = '删除菜单'.$info->tag_name;
+        $description = '删除标签'.$info->tag_name;
         if ($tag->del($id)){
             $msg['success'] = 1;
             $msg['msg'] = $description.'成功';
