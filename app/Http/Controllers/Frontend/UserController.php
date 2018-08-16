@@ -262,9 +262,15 @@ class UserController extends Controller
             } else {
                 //判断有没有unionid
                 if(!empty($unionid)){
+                    $weixin = new UserWeixin();
+                    //判断是否已经绑定uid
+                    if($weixin->isBind($userInfo->id)){
+                        $msg['data'] = '已经绑定过微信';
+                        $msg['success'] = -5;
+                        return $msg;
+                    }
                     //微信绑定uid
                     $uid = $userInfo->id;
-                    $weixin = new UserWeixin();
                     $weixin->updateByUnionid($unionid, ['uid' => $uid]);
                 }
                 $token = $user->userLogin($_SERVER["REMOTE_ADDR"],$userInfo->id,$request->header('user_agent'),$mobile);

@@ -100,4 +100,15 @@ class UserWeixin extends Model
             $str);
         return $str;
     }
+
+    //判断用户是否绑定过微信
+    function isBind($uid){
+        $count = UserWeixin::where('uid',$uid)->count();
+        if($count>0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
