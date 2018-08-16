@@ -29,10 +29,12 @@ class GameController extends Controller
         $game = new Game();
         $games = $game->where(function ($query) use ($key) {
             $key && $query->where('name', 'like', '%' . $key . '%');
-        })->paginate($perPage, ['id', 'name', 'picture', 'url', 'created_at', 'description', 'uid', 'status'], 'p', $p);
+        })->paginate($perPage, ['id', 'name', 'picture', 'url', 'created_at', 'description', 'uid', 'status','tag_id'], 'p', $p);
         $admin = new AdminUser();
+        $tag = new Tag();
         foreach ($games as $key => $game) {
             $games[$key]['adminUser'] = $admin->getUsername($game->uid);
+            $games[$key]['tag_info'] = $tag->getTagNames($game->tag_id);
         }
         return json_encode($games, JSON_UNESCAPED_UNICODE);
     }

@@ -83,10 +83,12 @@ class ActivityController extends Controller
         $activity = new Activity();
         $activities = $activity->where(function ($query) use ($key) {
             $key && $query->where('name', 'like', '%' . $key . '%');
-        })->paginate($perPage, ['id', 'name', 'picture', 'url','created_at','description','uid','status'], 'p', $p);
+        })->paginate($perPage, ['id', 'name', 'picture', 'url','created_at','description','uid','status','tag_id'], 'p', $p);
         $admin = new AdminUser();
+        $tag = new Tag();
         foreach ($activities as $key => $activity) {
             $activities[$key]['adminUser'] = $admin->getUsername($activity->uid);
+            $activities[$key]['tag_info'] = $tag->getTagNames($activity->tag_id);
         }
         return json_encode($activities, JSON_UNESCAPED_UNICODE);
     }
