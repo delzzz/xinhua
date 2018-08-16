@@ -265,7 +265,7 @@ class UserController extends Controller
                     $weixin = new UserWeixin();
                     //判断是否已经绑定uid
                     if($weixin->isBind($userInfo->id)){
-                        $msg['data'] = '已经绑定过微信';
+                        $msg['msg'] = '已经绑定过微信';
                         $msg['success'] = -5;
                         return $msg;
                     }
