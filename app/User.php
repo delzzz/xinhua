@@ -181,6 +181,9 @@ HAVING user_id=? and deleted_at is null ORDER BY max_created DESC limit ' . $num
     //用户排行
     function userRank($id)
     {
+        if(empty(Redis::Zrevrank('userScoreRanking', $id))){
+            return 0;
+        }
         return Redis::Zrevrank('userScoreRanking', $id) + 1;
     }
 
