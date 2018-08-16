@@ -11,7 +11,7 @@ class Module extends Model
     use SoftDeletes;
     protected $table = 'module';
     protected $primaryKey='mid';
-    protected $fillable = ['mod_name','mod_url','interface_url','mod_pid','mod_path','mod_ico','mod_state','all_path','parent_name'];
+    protected $fillable = ['mod_name','mod_url','interface_url','mod_pid','mod_path','mod_ico','mod_state','all_path','parent_name','level'];
     protected $dates = ['deleted_at'];
 
 
@@ -21,7 +21,7 @@ class Module extends Model
 
     //模块列表
     function lists(){
-        $moduleList =  Module::where('is_show',1)->get();
+        $moduleList =  Module::where('is_show',1)->orderBy('level','asc')->get();
         return $moduleList;
     }
 
