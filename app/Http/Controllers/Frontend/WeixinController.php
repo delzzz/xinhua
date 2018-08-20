@@ -165,6 +165,7 @@ class WeixinController extends Controller
                 $userAgent = $request->header('user_agent');
                 $user->where('id', $uid)->update(['last_ip' => $_SERVER["REMOTE_ADDR"], 'last_login' => date('Y-m-d H:i:s')]);
                 $token = $user->createToken($userAgent, $uid, $uInfo->mobile);
+                C::put($uid, $token, 4320);
                 $msg['token'] = $token;
                 $msg['success'] = 1;
                 $msg['msg'] = '登录成功';
