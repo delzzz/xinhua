@@ -17,6 +17,8 @@ Route::post('/verifyCode','UserController@verifyCode');
 Route::post('/sendMessage','SendMessageController@send');
 //检查用户名
 Route::post('/checkUsername','UserController@checkUsername');
+//检查手机号
+Route::get('/checkMobile','UserController@checkMobile');
 
 
 //地区列表

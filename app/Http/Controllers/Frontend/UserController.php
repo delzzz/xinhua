@@ -18,7 +18,7 @@ class UserController extends Controller
 {
     function __construct(Request $request)
     {
-        $this->pathArr = array('register', 'login', 'verifyCode', 'checkUsername', 'changePassword');
+        $this->pathArr = array('register', 'login', 'verifyCode', 'checkUsername', 'changePassword','checkMobile');
         parent::__construct($request);
     }
 
@@ -57,6 +57,24 @@ class UserController extends Controller
         return json_encode($msg, JSON_UNESCAPED_UNICODE);
     }
 
+    //判断手机号是否注册
+    public function checkMobile(Request $request){
+        $mobile = $request->input('mobile');
+        //判断用户是否已经存在
+        $user = new User();
+        $count = $user->isRegistered($mobile);
+        if ($count > 0) {
+            //手机已注册
+            $msg['success'] = 0;
+            $msg['msg'] = '您的手机已注册，请直接登录';
+            return json_encode($msg, JSON_UNESCAPED_UNICODE);
+        }
+        else{
+            $msg['success'] = 1;
+            $msg['msg'] = '手机号通过验证';
+            return json_encode($msg, JSON_UNESCAPED_UNICODE);
+        }
+    }
 
     //用户注册
     public function register(Request $request)
