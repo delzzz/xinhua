@@ -268,10 +268,10 @@ class UserController extends Controller
                 $count = $user->getErrLoginCount($mobile);
                 if ($count >= 5) {
                     $user->changeUserStatus($mobile, 0);
-                    $msg['msg'] = '错误5次';
+                    $msg['msg'] = '错误输入5次';
                     $msg['success'] = -2;
                 } elseif ($count >= 3) {
-                    $msg['msg'] = '错误3次';
+                    $msg['msg'] = '错误输入3次';
                     $msg['success'] = -1;
                 } else {
                     $msg['msg'] = '账号或密码不正确';

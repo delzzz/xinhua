@@ -76,7 +76,7 @@ class User extends Model
         $todayEnd = date('Y-m-d H:i:s');
         $count = \DB::table('user_login')
             ->where('mobile', $mobile)
-            ->where('status', 1)
+            ->where('status',0)
             ->whereBetween('login_time', [$todayStart, $todayEnd])
             ->count();
         return $count;
