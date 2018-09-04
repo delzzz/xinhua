@@ -511,7 +511,7 @@ class UserController extends Controller
         $region = new Region();
         $info = $user->getInfo($userId);
         $userRank = array();
-        $scoreList = Redis::Zrevrange('regionTotalRanking', 0, -1, 'WITHSCORES');
+        $scoreList = Redis::Zrevrange('regionScoreRanking', 0, -1, 'WITHSCORES');
         $i = 0;
         $regionName = $region->getFullName($info->county);
         foreach ($scoreList as $r => $score) {
