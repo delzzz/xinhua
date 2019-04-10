@@ -65,7 +65,7 @@ class Role extends Model
 
     //角色的模块列表
     function moduleList($rid){
-        $moduleList = \DB::table('role_module')->where('rid',$rid)->get();
+        $moduleList = \DB::table('role_module')->join('module','role_module.mid','=','module.mid')->where('rid',$rid)->orderBy('module.mid','asc')->orderBy('level','asc')->get();
         $roleModuleList = array();
         if(!empty($moduleList)){
             foreach ($moduleList as $key => $value){
